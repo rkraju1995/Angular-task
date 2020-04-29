@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
-import { fromEvent, Observable } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { fromEvent } from 'rxjs';
 
 @Component({
   selector: 'app-pointer',
@@ -8,29 +8,15 @@ import { fromEvent, Observable } from 'rxjs';
 })
 export class PointerComponent implements OnInit {
 
-  @ViewChild('canvas', { static: true })
-  canvas: ElementRef<HTMLCanvasElement>;
-  private ctx: CanvasRenderingContext2D;
-
-  move$ :  Observable<any>;
-  
   constructor() { }
-
+  yaxis = "100px"
+  xaxis = "300px"
 
   ngOnInit() {
-    this.move$ = fromEvent(document, 'mousemove');
-    const log = x => console.log(x);
-    this.move$.subscribe(log=>{
-      this.drawCircle(log['x'],log['y']);
-    });
+    fromEvent(document, "mousemove").subscribe((dt: MouseEvent) => {
+      this.xaxis = dt.clientX + "px"
+      this.yaxis = dt.clientY + "px"
+    })
   }
 
-  drawCircle(x,y){
-    this.ctx = this.canvas.nativeElement.getContext('2d');
-    this.ctx.beginPath();
-    this.ctx.arc(x, y, 5, 0, 2 * Math.PI);
-    this.ctx.stroke();
-    console.log("this.ctx",this.ctx)
-  }
-  
 }
